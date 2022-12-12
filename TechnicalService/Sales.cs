@@ -67,16 +67,13 @@ namespace BAIS3150Project.TechnicalService
             bool Success = false;
             int SaleNumner = 0;
 
-            /*
             ConfigurationBuilder DatabaseUsersBuilder = new();
             DatabaseUsersBuilder.SetBasePath(Directory.GetCurrentDirectory());
             DatabaseUsersBuilder.AddJsonFile("appsettings.json");
             IConfiguration DatabaseUsersConfiguration = DatabaseUsersBuilder.Build();
-            */
 
             SqlConnection DataSource = new();
-            DataSource.ConnectionString = @"Persist Security Info=False;Database=dnguyen97;User ID=dnguyen97;Password=Thaianh1011;server=dev1.baist.ca";
-            // DataSource.ConnectionString = DataSource.GetConnectionString("dnguyen97");
+            DataSource.ConnectionString = DatabaseUsersConfiguration.GetConnectionString("dnguyen97");
             DataSource.Open();
 
             SqlCommand AddCommand = new SqlCommand
