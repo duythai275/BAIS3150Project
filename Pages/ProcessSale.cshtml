@@ -1,0 +1,316 @@
+﻿@page
+@model BAIS3150Project.Pages.ProcessSaleModel
+@{
+    Layout = "_Layout";
+    ViewData["Tittle"] = "Sales";
+}
+@section styleContent
+{
+    <style>
+        input {
+            margin-left: 10px;
+        }
+
+        .actions {
+            width: 100px;
+            margin: 3px;
+        }
+        tfoot input
+        {
+            width: 100%;
+            margin: 0px;
+        }
+    </style>
+}
+@section scriptContent
+{
+    <script type="text/javascript">
+        window.onload = e => {
+            // Reset when load form
+            if (window.document.form.SaleItems.value === "") {
+                localStorage.removeItem('SaleItems');
+            }
+
+            // for OnPostSearchCustomer
+            if (localStorage.getItem('SaleItems')) {
+                SaleItems = JSON.parse(localStorage.getItem('SaleItems'));
+                display(SaleItems);
+            }
+        }
+
+        const addSaleItem = (select) => {
+            // let SaleItems = JSON.parse(localStorage.getItem('SaleItems'));
+            if (window.document.getElementById("ANewSaleItemCode").value === "") {
+                alert("Please select Item Code");
+            }
+            else {
+                let SaleItems = [];
+
+                // Check if Items there
+                if (localStorage.getItem('SaleItems')) {
+                    SaleItems = JSON.parse(localStorage.getItem('SaleItems'));
+                }
+
+                // Add Item
+                SaleItems.push({
+                    ItemCode: window.document.getElementById("ANewSaleItemCode").value,
+                    Description: window.document.getElementById("ANewSaleItemDescription").value,
+                    UnitPrice: window.document.getElementById("ANewSaleItemUnitPrice").value,
+                    Quantity: window.document.getElementById("ANewSaleItemQuantity").value,
+                    ItemTotal: window.document.getElementById("ANewSaleItemTotal").value
+                });
+
+                // Store Items
+                localStorage.setItem('SaleItems', JSON.stringify(SaleItems));
+                window.document.form.SaleItems.value = JSON.stringify(SaleItems.map( SaleItem => ({
+                    AItem: {
+                        ItemCode: SaleItem.ItemCode,
+                        Description: SaleItem.Description,
+                        UnitPrice: SaleItem.UnitPrice
+                    },
+                    Quantity: SaleItem.Quantity,
+                    ItemTotal: SaleItem.ItemTotal
+                })));
+
+                // Display
+                display(SaleItems);
+
+                // Reset
+                window.document.getElementById("ANewSaleItemCode").value = "";
+                window.document.getElementById("ANewSaleItemDescription").value = "";
+                window.document.getElementById("ANewSaleItemUnitPrice").value = "";
+                window.document.getElementById("ANewSaleItemQuantity").value = "0";
+                window.document.getElementById("ANewSaleItemTotal").value = "0";
+                select.value = "";
+            }
+        }
+
+        const removeSaleItem = index => {
+            const SaleItems = JSON.parse(localStorage.getItem('SaleItems')).filter(({ ItemCode },i) => i !== index);
+            localStorage.setItem('SaleItems', JSON.stringify(SaleItems));
+            localStorage.setItem('SaleItems', JSON.stringify(SaleItems));
+            window.document.form.SaleItems.value = JSON.stringify(SaleItems.map(SaleItem => ({
+                AItem: {
+                    ItemCode: SaleItem.ItemCode,
+                    Description: SaleItem.Description,
+                    UnitPrice: SaleItem.UnitPrice
+                },
+                Quantity: SaleItem.Quantity,
+                ItemTotal: SaleItem.ItemTotal
+            })));
+            display(SaleItems);
+
+            
+        }
+
+        const processSale = (form) => {
+            let isValid = false;
+
+            const saleDate = form.SaleDate.value;
+            const salePerson = form.SalePerson.value;
+            const customerName = form.CustomerName.value;
+
+            if (saleDate.length === 0) {
+                alert("Sale Date is required!");
+            } else if (salePerson.length === 0) {
+                alert("Sale Person is required!");
+            } else if (customerName.length === 0) {
+                alert("Customer is required!");
+            } else {
+                display([]);
+                isValid = true;
+            }
+
+            return isValid;
+        }
+
+        const display = SaleItems => {
+            let innerHTML = "";
+            SaleItems.forEach((SaleItem,index) => {
+                innerHTML += "<tr>";
+                innerHTML += ("<td>" + SaleItem.ItemCode + "</td>");
+                innerHTML += ("<td>" + SaleItem.Description + "</td>");
+                innerHTML += ("<td align='right'>" + SaleItem.UnitPrice + "</td>");
+                innerHTML += ("<td align='right'>" + SaleItem.Quantity + "</td>");
+                innerHTML += ("<td align='right'>" + SaleItem.ItemTotal + "</td>");
+                innerHTML += (`<td align="center"><input class="actions" type="button" value="Remove" onclick="removeSaleItem(${index});" /></td>`);
+                innerHTML += "</tr>";
+            });
+            window.document.getElementById("SaleItems").innerHTML = innerHTML;
+
+            // Calculate Sale Total
+            calSaleTotal(SaleItems);
+        }
+
+        const getItem = item => {
+            window.document.getElementById("ANewSaleItemCode").value = item.value.split("|")[0];
+            window.document.getElementById("ANewSaleItemDescription").value = item.value.split("|")[1];
+            window.document.getElementById("ANewSaleItemUnitPrice").value = item.value.split("|")[2];
+        }
+
+        const calItemTotal = () => {
+            const quantity = parseInt(window.document.getElementById("ANewSaleItemQuantity").value);
+            const unitprice = parseFloat(window.document.getElementById("ANewSaleItemUnitPrice").value);
+            if ( quantity !== NaN ) {
+                window.document.getElementById("ANewSaleItemTotal").value = (quantity * unitprice).toFixed(2);
+                window.document.getElementById("ANewSaleItemQuantity").value = quantity;
+            }
+            else {
+                alert("Quantity should be number!!!");
+            }
+        }
+
+        const calSaleTotal = SaleItems => {
+            // Calculate Subtotal GST Total
+            const subtotal = (SaleItems.reduce((sum, curr) => sum + parseFloat(curr.ItemTotal), 0)).toFixed(2);
+            const gst = (parseFloat(subtotal) * 0.05).toFixed(2);
+            const saletotal = (parseFloat(subtotal) + parseFloat(gst)).toFixed(2);
+            window.document.getElementById("subtotal").innerHTML = subtotal;
+            window.document.getElementById("gst").innerHTML = gst;
+            window.document.getElementById("saletotal").innerHTML = saletotal;
+        }
+    </script>
+}
+<h1>Process Sale</h1>
+<form name="form" method="post">
+    <table width="100%">
+        <tr>
+            <td align="right"><strong>Sale Date:</strong></td>
+            <td><input type="date" name="SaleDate" value="@Model.SaleDate" /></td>
+            <td width="15%" align="right"><strong>Customer Id:</strong></td>
+            <td width="10%"><input type="text" name="CustomerId" value="@Model.CustomerId" /></td>
+            <td align="left">
+                <input class="actions" type="submit" value="Find Customer" asp-page-handler="SearchCustomer" />
+            </td>
+            <td width="10%">&nbsp;</td>
+        </tr>
+        <tr>
+            <td align="right"><strong>Salesperson:</strong></td>
+            <td><input type="text" name="SalePerson" value="@Model.SalePerson" /></td>
+            <td align="right"><strong>Customer Name:</strong></td>
+            <td><input type="text" name="CustomerName" disabled value="@Model.ACustomer.CustomerName"/></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td align="right"><strong>Address:</strong></td>
+            <td><input type="text" disabled value="@Model.ACustomer.Address" /></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td align="right"><strong>City:</strong></td>
+            <td><input type="text" disabled value="@Model.ACustomer.City" /></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td align="right"><strong>Province:</strong></td>
+            <td><input type="text" disabled value="@Model.ACustomer.Province" /></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td align="right"><strong>Postal Code:</strong></td>
+            <td><input type="text" disabled value="@Model.ACustomer.PostalCode" /></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <table width="100%" border="1" cellspacing="0" cellpadding="7">
+        <thead>
+            <tr>
+                <td width="10%" align="center"><strong><u>Item Code</u></strong></td>
+                <td align="center"><strong><u>Description</u></strong></td>
+                <td width="15%" align="center"><strong><u>Unit Price</u></strong></td>
+                <td width="10%" align="center"><strong><u>Quantity</u></strong></td>
+                <td width="10%" align="center"><strong><u>Item Total</u></strong></td>
+                <td width="10%">&nbsp;</td>
+            </tr>
+        </thead>
+        <tbody id="SaleItems"></tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <select name="ANewSaleItemCodeSearch" style="width: 100%;" onchange="getItem(window.document.form.ANewSaleItemCodeSearch);">
+                        <option value=""></option>
+                        @{
+                            foreach (var Item in Model.Items)
+                            {
+                                <option value="@Item.ItemCode|@Item.Description|@Item.UnitPrice">@Item.ItemCode</option>
+                            }
+                        }
+                    </select>
+                    <input type="text" id="ANewSaleItemCode" hidden />
+                </td>
+                <td><input type="text" id="ANewSaleItemDescription" disabled /></td>
+                <td><input type="text" id="ANewSaleItemUnitPrice" disabled /></td>
+                <td><input type="text" id="ANewSaleItemQuantity" onchange="calItemTotal();" value="0" /></td>
+                <td><input type="text" id="ANewSaleItemTotal" disabled value="0" /></td>
+                <td align="center">
+                    <input class="actions" type="button" value="Add" onclick="addSaleItem(window.document.form.ANewSaleItemCodeSearch);" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <table width="100%">
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td width="10%">&nbsp;</td>
+            <td>&nbsp;</td>
+            <td width="15%" align="right"><strong>Sub Total:</strong></td>
+            <td width="20%" align="right" id="subtotal">0</td>
+            <td width="10%">&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td align="right"><strong>GST:</strong></td>
+            <td align="right" id="gst">0</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td align="right"><strong>Sale Total:</strong></td>
+            <td align="right" id="saletotal">0</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+            <td align="center">
+                <input class="actions" type="submit" 
+                    onclick="return processSale(window.document.form);" 
+                    value="Process" 
+                    asp-page-handler="ProcessSale" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td colspan="3" align="right">@Model.Message</td>
+        </tr>
+    </table>
+    <input type="text" name="SaleItems" hidden value="@Model.SaleItems" />
+</form>

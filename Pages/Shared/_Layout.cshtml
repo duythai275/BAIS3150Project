@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link href="~/CSS/index.css" rel="stylesheet" type="text/css" />
+    @if (IsSectionDefined("styleContent"))
+    {
+        @RenderSection("styleContent");
+    }
+    @if (IsSectionDefined("scriptContent"))
+    {
+        @RenderSection("scriptContent");
+    }
+</head>
+<body>
+    <header><h1 style="color:white;">BAIS3150 Project</h1></header>
+    <div class="topnav">
+        <a href="~/index">Home</a>
+        <a href="~/Items">Items</a>
+        <a href="~/Customers">Customers</a>
+        <a href="~/Sales">Sales</a>
+    </div>
+    <div id="main">
+        <article>
+            @RenderBody()
+        </article>
+        <nav></nav>
+        <aside></aside>
+    </div>
+    <footer>
+        <div>Duy T Nguyen</div>
+        <div>dnguyen97@nait.ca</div>
+    </footer>
+</body>
+</html>

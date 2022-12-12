@@ -1,0 +1,97 @@
+﻿@page
+@model BAIS3150Project.Pages.AddCustomerModel
+@{
+    Layout = "_Layout";
+    ViewData["Tittle"] = "Add Customer";
+}
+@section scriptContent
+    {
+    <script type="text/javascript">
+        function IsFormValid(aForm) {
+            var isValid = false;
+
+            // Get all fields
+            var CustomerId = aForm.CustomerId.value;
+            var CustomerName = aForm.CustomerName.value;
+            var Address = aForm.Address.value;
+            var City = aForm.City.value;
+            var Province = aForm.Province.value;
+            var PostalCode = aForm.PostalCode.value;
+
+            if (CustomerId.length === 0) {
+                alert("Customer Id is required");
+            }
+            else if (CustomerName.length === 0) {
+                alert("Customer Name is required");
+            }
+            else if (Address.length === 0) {
+                alert("Address is required");
+            }
+            else if (City.length === 0) {
+                alert("City is required");
+            }
+            else if (Province.length === 0) {
+                alert("Province is required");
+            }
+            else if (PostalCode.length === 0) {
+                alert("Postal Code is required");
+            }
+            else {
+                isValid = true;
+            }
+
+            return isValid;
+        }
+    </script>
+}
+<h1>Add Customer</h1>
+<form name="form" method="post" onsubmit="return IsFormValid(window.document.form);">
+    <table>
+        <tr>
+            <td>Customer Id:</td>
+            <td>
+                <input type="text" name="CustomerId" />
+                @Html.ValidationMessage("CustomerId")
+            </td>
+        </tr>
+        <tr>
+            <td>Customer Name:</td>
+            <td>
+                <input type="text" name="CustomerName" />
+                @Html.ValidationMessage("CustomerName")
+            </td>
+        </tr>
+        <tr>
+            <td>Address:</td>
+            <td>
+                <input type="text" name="Address" />
+                @Html.ValidationMessage("Address")
+            </td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td>
+                <input type="text" name="City" />
+                @Html.ValidationMessage("City")
+            </td>
+        </tr>
+        <tr>
+            <td>Province:</td>
+            <td>
+                <input type="text" name="Province" />
+                @Html.ValidationMessage("Province")
+            </td>
+        </tr>
+        <tr>
+            <td>Postal Code:</td>
+            <td>
+                <input type="text" name="PostalCode" />
+                @Html.ValidationMessage("PostalCode")
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right"><input type="submit" value="Add New" /></td>
+        </tr>
+    </table>
+</form>
+@Model.Message

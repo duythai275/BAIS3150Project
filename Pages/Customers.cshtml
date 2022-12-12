@@ -1,0 +1,71 @@
+﻿@page
+@model BAIS3150Project.Pages.CustomersModel
+@{
+    Layout = "_Layout";
+    ViewData["Tittle"] = "Customers";
+}
+@section styleContent
+{
+    <style>
+        .tableFixHead {
+            overflow-y: auto;
+            height: 350px;
+            width: 100%;
+        }
+
+            .tableFixHead thead th {
+                position: sticky;
+                top: 0;
+            }
+
+            .tableFixHead table {
+                width: 100%;
+            }
+
+        th {
+            background: #eee;
+        }
+
+        .actions input {
+            width: 100px;
+            margin: 10px;
+        }
+    </style>
+}
+<h1>Customer Management</h1>
+<form name="form" method="post">
+    <div class="actions">
+        <input type="submit" value="Add New" asp-route-action="Add" />
+        <input type="submit" value="Update" asp-route-action="Update" />
+        <input type="submit" value="Delete" asp-route-action="Delete" />
+    </div>
+</form>
+<div class="tableFixHead">
+    <table border="1" cellspacing="0" cellpadding="7">
+        <thead>
+            <tr>
+                <th>Customer Id</th>
+                <th>Customer Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Province</th>
+                <th>Postal Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var Customer in Model.Customers)
+                {
+                    <tr>
+                        <td>@Customer.CustomerId</td>
+                        <td>@Customer.CustomerName</td>
+                        <td>@Customer.Address</td>
+                        <td>@Customer.City</td>
+                        <td>@Customer.Province</td>
+                        <td>@Customer.PostalCode</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,75 @@
+﻿@page
+@model BAIS3150Project.Pages.AddItemModel
+@{
+    Layout = "_Layout";
+    ViewData["Tittle"] = "Add Item";
+}
+@section scriptContent
+{
+    <script type="text/javascript">
+        function IsFormValid(aForm) {
+            var isValid = false;
+
+            // Get all fields
+            var ItemCode = aForm.ItemCode.value;
+            var Description = aForm.Description.value;
+            var UnitPrice = aForm.UnitPrice.value;
+            var Quantity = aForm.Quantity.value;
+
+            if (ItemCode.length === 0) {
+                alert("Item Code is required");
+            }
+            else if (Description.length === 0) {
+                alert("Description is required");
+            }
+            else if (UnitPrice.length === 0) {
+                alert("Unit Price is required");
+            }
+            else if (Quantity.length === 0) {
+                alert("Quantity is required");
+            }
+            else {
+                isValid = true;
+            }
+
+            return isValid;
+        }
+    </script>
+}
+<h1>Add Item</h1>
+<form name="form" method="post" onsubmit="return IsFormValid(window.document.form);">
+    <table>
+        <tr>
+            <td>Item Code:</td>
+            <td>
+                <input type="text" name="ItemCode" />
+                @Html.ValidationMessage("ItemCode")
+            </td>
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td>
+                <input type="text" name="Description" />
+                @Html.ValidationMessage("Description")
+            </td>
+        </tr>
+        <tr>
+            <td>Unit Price:</td>
+            <td>
+                <input type="text" name="UnitPrice" />
+                @Html.ValidationMessage("UnitPrice")
+            </td>
+        </tr>
+        <tr>
+            <td>Quantity:</td>
+            <td>
+                <input type="text" name="Quantity" />
+                @Html.ValidationMessage("Quantity")
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right"><input type="submit" value="Add New" /></td>
+        </tr>
+    </table>
+</form>
+@Model.Message

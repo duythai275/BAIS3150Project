@@ -1,0 +1,67 @@
+﻿@page
+@model BAIS3150Project.Pages.ItemsModel
+@{
+    Layout = "_Layout";
+    ViewData["Tittle"] = "Items";
+}
+@section styleContent
+{
+<style>
+    .tableFixHead {
+        overflow-y: auto;
+        height: 350px;
+        width: 100%;
+    }
+
+    .tableFixHead thead th {
+        position: sticky;
+        top: 0;
+    }
+
+    .tableFixHead table {
+        width: 100%;
+    }
+
+    th {
+        background: #eee;
+    }
+
+    .actions input {
+        width: 100px;
+        margin: 10px;
+    }
+</style>
+}
+<h1>Item Management</h1>
+<form name="form" method="post">
+    <div class="actions">
+        <input type="submit" value="Add New" asp-route-action="Add" />
+        <input type="submit" value="Update" asp-route-action="Update" />
+        <input type="submit" value="Delete" asp-route-action="Delete" />
+    </div>
+</form>
+<div class="tableFixHead">
+    <table border="1" cellspacing="0" cellpadding="7">
+        <thead>
+            <tr>
+                <th>Item Code</th>
+                <th>Description</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var Item in Model.Items)
+                {
+                    <tr>
+                        <td>@Item.ItemCode</td>
+                        <td>@Item.Description</td>
+                        <td>@Item.UnitPrice</td>
+                        <td>@Item.Quantity</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

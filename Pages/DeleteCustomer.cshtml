@@ -1,0 +1,91 @@
+﻿@page
+@model BAIS3150Project.Pages.DeleteCustomerModel
+@{
+    Layout = "_Layout";
+    ViewData["Tittle"] = "Delete Customer";
+}
+<h1>Delete Customer</h1>
+<form name="form" method="post">
+    <table>
+        <tr>
+            <td>Customer Id:</td>
+            <td>
+                <input type="text" name="SearchCustomerId" />
+            </td>
+            <td>
+                @Html.ValidationMessage("SearchCustomerId")
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" value="Search" asp-page-handler="Search" />
+            </td>
+        </tr>
+        <tr>
+            <td>Customer Id:</td>
+            <td>
+                <input type="text" hidden name="CustomerId" value="@Model.CustomerId" />
+                <input type="text" disabled value="@Model.CustomerId" />
+            </td>
+            <td>
+                @Html.ValidationMessage("CustomerId")
+            </td>
+        </tr>
+        <tr>
+            <td>Customer Name:</td>
+            <td>
+                <input type="text" hidden name="CustomerName" value="@Model.CustomerName" />
+                <input type="text" disabled value="@Model.CustomerName" />
+            </td>
+            <td>
+                @Html.ValidationMessage("CustomerName")
+            </td>
+        </tr>
+        <tr>
+            <td>Address:</td>
+            <td>
+                <input type="text" hidden name="Address" value="@Model.Address" />
+                <input type="text" disabled value="@Model.Address" />
+            </td>
+            <td>
+                @Html.ValidationMessage("Address")
+            </td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td>
+                <input type="text" hidden name="City" value="@Model.City" />
+                <input type="text" disabled value="@Model.City" />
+            </td>
+            <td>
+                @Html.ValidationMessage("City")
+            </td>
+        </tr>
+        <tr>
+            <td>Province:</td>
+            <td>
+                <input type="text" hidden name="Province" value="@Model.Province" />
+                <input type="text" disabled value="@Model.Province" />
+            </td>
+            <td>
+                @Html.ValidationMessage("Province")
+            </td>
+        </tr>
+        <tr>
+            <td>Postal Code:</td>
+            <td>
+                <input type="text" hidden name="PostalCode" value="@Model.PostalCode" />
+                <input type="text" disabled value="@Model.PostalCode" />
+            </td>
+            <td>
+                @Html.ValidationMessage("PostalCode")
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" value="Delete" asp-page-handler="Delete" />
+            </td>
+        </tr>
+    </table>
+</form>
+@Model.Message

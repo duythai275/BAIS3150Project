@@ -1,0 +1,95 @@
+﻿@page
+@model BAIS3150Project.Pages.SalesModel
+@{
+    Layout = "_Layout";
+    ViewData["Tittle"] = "Sales";
+}
+@section styleContent
+{
+    <style>
+    .tableFixHead {
+        overflow-y: auto;
+        height: 48vh;
+        width: 100%;
+    }
+
+    .tableFixHead table {
+        width: 100%;
+    }
+
+    .actions input {
+        width: 100px;
+        margin: 10px;
+    }
+    </style>
+}
+<h1>Sales</h1>
+<form name="form" method="post">
+    <div class="actions">
+        <input type="submit" value="Process Sale" />
+    </div>
+</form>
+<br/>
+<div class="tableFixHead">
+    
+    @{
+        foreach (var Sale in Model.Sales)
+        {
+            <hr/>
+            <table cellspacing="0" cellpadding="3">
+                <tbody>
+                    <tr>
+                        <td colspan="2" valign="top">
+                            <div><strong>Sale Number:</strong> @Sale.SaleNumber</div>
+                            <div><strong>Sale Date:</strong> @Sale.SaleDate</div>
+                            <div><strong>Saleperson:</strong> @Sale.SalePerson</div>
+                        </td>
+                        <td colspan="3" valign="top">
+                            <div><strong>Customer Id:</strong> @Sale.Customer.CustomerId</div>
+                            <div><strong>Customer Name:</strong> @Sale.Customer.CustomerName</div>
+                            <div><strong>Address:</strong> @Sale.Customer.Address</div>
+                            <div><strong>City:</strong> @Sale.Customer.City</div>
+                            <div><strong>Province:</strong> @Sale.Customer.Province</div>
+                            <div><strong>Postal Code:</strong> @Sale.Customer.PostalCode</div>
+                            <br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="15%"><strong>Item Code</strong></td>
+                        <td><strong>Description</strong></td>
+                        <td width="15%"><strong>Unit Price</strong></td>
+                        <td width="15%"><strong>Quantity</strong></td>
+                        <td width="15%"><strong>Item Total</strong></td>
+                    </tr>
+                    @{
+                        foreach (var SaleItem in Sale.SaleItems)
+                        {
+                            <tr>
+                                <td>@SaleItem.AItem.ItemCode</td>
+                                <td>@SaleItem.AItem.Description</td>
+                                <td>@SaleItem.AItem.UnitPrice</td>
+                                <td>@SaleItem.Quantity</td>
+                                <td>@SaleItem.ItemTotal</td>
+                            </tr>
+                        }
+                    }
+                    <tr>
+                        <td colspan="3"></td>
+                        <td align="right"><strong>Subtotal:</strong></td>
+                        <td>@Sale.SubTotal</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td align="right"><strong>GST:</strong></td>
+                        <td>@Sale.GST</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td align="right"><strong>Total:</strong></td>
+                        <td>@Sale.Total</td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    }
+</div>

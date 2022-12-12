@@ -1,0 +1,68 @@
+﻿@page
+@model BAIS3150Project.Pages.UpdateItemModel
+@{
+    Layout = "_Layout";
+    ViewData["Tittle"] = "Update Item";
+}
+<h1>Update Item</h1>
+<form name="form" method="post">
+    <table>
+        <tr>
+            <td>Item Code:</td>
+            <td>
+                <input type="text" name="SearchItemCode" />
+            </td>
+            <td>
+                @Html.ValidationMessage("SearchItemCode")
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" value="Search" asp-page-handler="Search" />
+            </td>
+        </tr>
+        <tr>
+            <td>Item Code:</td>
+            <td>
+                <input type="text" hidden name="ItemCode" value="@Model.ItemCode" />
+                <input type="text" disabled value="@Model.ItemCode" />
+            </td>
+            <td>
+                @Html.ValidationMessage("ItemCode")
+            </td>
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td>
+                <input type="text" name="Description" value="@Model.Description" />
+            </td>
+            <td>
+                @Html.ValidationMessage("Description")
+            </td>
+        </tr>
+        <tr>
+            <td>Unit Price:</td>
+            <td>
+                <input type="text" name="UnitPrice" value="@Model.UnitPrice" />
+            </td>
+            <td>
+                @Html.ValidationMessage("UnitPrice")
+            </td>
+        </tr>
+        <tr>
+            <td>Quantity:</td>
+            <td>
+                <input type="text" name="Quantity" value="@Model.Quantity" />
+            </td>
+            <td>
+                @Html.ValidationMessage("Quantity")
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="submit" value="Update" asp-page-handler="Update" />
+            </td>
+        </tr>
+    </table>
+</form>
+@Model.Message
